@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.duckdb
+
+# Donnée volumineuse regénérable
+data/tarifs_raw.csv
+
+# Node / Next
+web/node_modules/
+web/.next/
+web/out/
+
+# Divers
+.env
+.DS_Store
