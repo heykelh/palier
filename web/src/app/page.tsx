@@ -4,9 +4,11 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ReferenceLine,
   ResponsiveContainer, CartesianGrid,
 } from "recharts";
+import Link from "next/link";
 import data from "@/data/tarifs.json";
 import { recommend, revenueCurve } from "@/lib/pricing";
 import Intro from "./Intro";
+import YieldLab from "./YieldLab";
 
 type Row = {
   od: string; origine: string; destination: string;
@@ -80,13 +82,18 @@ export default function Page() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-8">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold tracking-tight">
-          PALIER <span className="text-white/30 font-light">/ simulateur tarifaire TGV</span>
-        </h1>
-        <p className="mt-1 text-sm text-white/50">
-          Analyse pricing et optimisation de grilles sur la base des prix TGV INOUI / OUIGO.
-        </p>
+      <header className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            PALIER <span className="text-white/30 font-light">/ simulateur tarifaire TGV</span>
+          </h1>
+          <p className="mt-1 text-sm text-white/50">
+            Analyse pricing et optimisation de grilles sur la base des prix TGV INOUI / OUIGO.
+          </p>
+        </div>
+        <Link href="/guide" className="shrink-0 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/70 hover:bg-white/5">
+          Guide d'utilisation
+        </Link>
       </header>
 
       <Intro />
@@ -192,9 +199,11 @@ export default function Page() {
         </Card>
       </section>
 
+      {ref && <YieldLab prixMin={band[0]} prixMax={band[1]} od={od} classe={cls} />}
+
       <footer className="mt-6 text-[11px] leading-relaxed text-white/30">
         <p><span style={{ color: C.green }}>Donnée réelle</span> : grille de prix et positionnement INOUI/OUIGO (SNCF Open Data, {data.source}).
-        <span style={{ color: C.amber }}> Hypothèse paramétrable</span> : l'élasticité-prix. Le prix optimal <code>p* = p_ref·(1+ε)/(2ε)</code> ne dépend que du prix de référence et de l'élasticité. Modèle démonstrateur (demande linéaire), non le moteur yield de production SNCF. Calcul 100 % déterministe.</p>
+        <span style={{ color: C.amber }}> Hypothèse paramétrable</span> : l'élasticité-prix, ainsi que la demande, la capacité et la variabilité du module yield. L'allocation suit l'algorithme EMSR-b, méthode de référence du revenue management. Prix optimal <code>p* = p_ref·(1+ε)/(2ε)</code>. Calcul 100 % déterministe. Modèle démonstrateur, distinct du moteur de yield de production SNCF.</p>
       </footer>
     </main>
   );
